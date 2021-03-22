@@ -2,7 +2,10 @@ package com.example.girl.controller;
 
 
 import com.example.girl.domain.Girl;
+import com.example.girl.domain.Result;
 import com.example.girl.repository.GirlRepository;
+import com.example.girl.service.GirlService;
+import com.example.girl.utils.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,14 @@ public class GirlController {
 
     private GirlRepository girlRepository;
 
+
+    private GirlService girlService;
+
+    @Autowired
+    public void setGirlService(GirlService girlService) {
+        this.girlService = girlService;
+    }
+
     @Autowired
     public void setGirlRepository(GirlRepository girlRepository) {
         this.girlRepository = girlRepository;
@@ -46,16 +57,13 @@ public class GirlController {
         添加一个女生
      */
     @PostMapping("/girl")
-    public Girl girlAdd(@Valid Girl girl, BindingResult bindingResult) {
+    public Result<Girl> girlAdd(@Valid Girl girl, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getFieldError().getDefaultMessage());
             return null;
+//            return ResultUtil.error(1, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        girl.setName(girl.getName());
-        girl.setAge(girl.getAge());
-        girl.setSalary(girl.getSalary());
-        return girlRepository.save(girl);
+        return ResultUtil.success(girlRepository.save(girl));
     }
 
     /*
@@ -70,7 +78,7 @@ public class GirlController {
         更新
      */
     @PutMapping("/girl/{id}")
-    public Girl girlUpdate(@PathVariable("id") Integer id,@Valid Girl girl,BindingResult bindingResult) {
+    public Girl girlUpdate(@PathVariable("id") Integer id, @Valid Girl girl, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getFieldError().getDefaultMessage());
             return null;
@@ -86,5 +94,31 @@ public class GirlController {
         return null;
     }
 
+    /*
+        删除
+     */
+    @DeleteMapping("/girl/{id}")
+    public Result<Girl> girlDelete(@PathVariable Integer id) {
+        if (girlRepository.existsById(id)) {
+            girlRepository.deleteById(id);
+        }
+        return ResultUtil.success();
+    }
+
+    /*
+        通过年龄查询女生列表
+     */
+    @GetMapping("/girls/{age}")
+    public Result<Girl> girlListByAge(@PathVariable Integer age) {
+        return ResultUtil.success(girlRepository.findByAge(age));
+    }
+
+    /*
+        判断年龄
+     */
+    @GetMapping("/girl/getAge/{id}")
+    public void getAge(@PathVariable Integer id) throws Exception {
+        girlService.getAge(id);
+    }
 
 }
