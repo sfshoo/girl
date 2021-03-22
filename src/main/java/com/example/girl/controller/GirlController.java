@@ -3,6 +3,7 @@ package com.example.girl.controller;
 
 import com.example.girl.domain.Girl;
 import com.example.girl.domain.Result;
+import com.example.girl.enums.ResultEnum;
 import com.example.girl.repository.GirlRepository;
 import com.example.girl.service.GirlService;
 import com.example.girl.utils.ResultUtil;
@@ -31,7 +32,6 @@ public class GirlController {
 
     private GirlRepository girlRepository;
 
-
     private GirlService girlService;
 
     @Autowired
@@ -48,9 +48,9 @@ public class GirlController {
        查找所有女生
     */
     @GetMapping("/girls")
-    public List<Girl> girlList() {
+    public Result<Girl> girlList() {
         logger.info("girllist");
-        return girlRepository.findAll();
+        return ResultUtil.success(ResultEnum.SUCCESS, girlRepository.findAll());
     }
 
     /*
@@ -59,37 +59,32 @@ public class GirlController {
     @PostMapping("/girl")
     public Result<Girl> girlAdd(@Valid Girl girl, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return null;
-//            return ResultUtil.error(1, bindingResult.getFieldError().getDefaultMessage());
+            return ResultUtil.error(ResultEnum.UNKNOW_ERROR);
         }
 
-        return ResultUtil.success(girlRepository.save(girl));
+        return ResultUtil.success(ResultEnum.SUCCESS, girlRepository.save(girl));
     }
 
     /*
         根据id查询女生
      */
     @GetMapping("/girl/{id}")
-    public Girl girlFindOne(@PathVariable("id") Integer id) {
-        return girlRepository.findById(id).orElse(null);
+    public Result girlFindOne(@PathVariable("id") Integer id) {
+        return ResultUtil.success(ResultEnum.SUCCESS, girlRepository.findById(id).orElse(null));
     }
 
     /*
         更新
      */
     @PutMapping("/girl/{id}")
-    public Girl girlUpdate(@PathVariable("id") Integer id, @Valid Girl girl, BindingResult bindingResult) {
+    public Result girlUpdate(@PathVariable("id") Integer id, @Valid Girl girl, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getFieldError().getDefaultMessage());
-            return null;
+            return ResultUtil.error(ResultEnum.FIELD_ERROR, bindingResult.getFieldError().getDefaultMessage());
         }
 
         Optional<Girl> optional = girlRepository.findById(id);
         if (optional.isPresent()) {
-            girl.setName(girl.getName());
-            girl.setAge(girl.getAge());
-            girl.setSalary(girl.getSalary());
-            return girlRepository.save(girl);
+            return ResultUtil.success(ResultEnum.SUCCESS, girlRepository.save(girl));
         }
         return null;
     }
@@ -101,16 +96,19 @@ public class GirlController {
     public Result<Girl> girlDelete(@PathVariable Integer id) {
         if (girlRepository.existsById(id)) {
             girlRepository.deleteById(id);
+            return ResultUtil.success(ResultEnum.SUCCESS);
+        } else {
+            return ResultUtil.error(ResultEnum.OBJECT_ERROR);
         }
-        return ResultUtil.success();
+
     }
 
     /*
         通过年龄查询女生列表
      */
     @GetMapping("/girls/{age}")
-    public Result<Girl> girlListByAge(@PathVariable Integer age) {
-        return ResultUtil.success(girlRepository.findByAge(age));
+    public Result girlListByAge(@PathVariable Integer age) {
+        return ResultUtil.success(ResultEnum.SUCCESS, girlRepository.findByAge(age));
     }
 
     /*

@@ -1,24 +1,19 @@
 package com.example.girl.domain;
 
-
-/**
- * http请求返回的最外层对象
- */
-
 public class Result<T> {
     // 错误码
     private Integer code;
     // 提示信息
-    private String msg;
-    // 具体内容
-    private T data;
+    private String message;
+    // 具体返回内容
+    private T date;
 
     @Override
-    public String toString() {
+    public String   toString() {
         return "Result{" +
                 "code=" + code +
-                ", msg='" + msg + '\'' +
-                ", data=" + data +
+                ", message='" + message + '\'' +
+                ", date=" + date +
                 '}';
     }
 
@@ -30,20 +25,21 @@ public class Result<T> {
         this.code = code;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public T getData() {
-        return data;
+    public T getDate() {
+        return date;
     }
 
-    public void setData(T data) {
-        this.data = data;
+    public void setDate(T date) {
+        this.date = date;
     }
+
 
 }

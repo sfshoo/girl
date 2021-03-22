@@ -39,10 +39,8 @@ public class GirlService {
         Integer age = girl.getAge();
 
         if (age < 10) {
-            // 返回CODE=100,MSG="你可能还在上小学"
             throw new GirlException(ResultEnum.PRIMARY_SCHOOL);
         } else if (age > 10 && age < 16) {
-            // 返回CODE=101,MSG="你可能在上初中"
             throw new GirlException(ResultEnum.MIDDLE_SCHOOL);
         }
     }

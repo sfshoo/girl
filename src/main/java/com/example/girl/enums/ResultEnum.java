@@ -1,14 +1,25 @@
 package com.example.girl.enums;
 
+import com.example.girl.utils.ResultUtil;
+
 public enum ResultEnum {
-    UNKNOW_ERROR(-1,"未知错误"),
-    SUCCESS(0,"成功"),
-    PRIMARY_SCHOOL(100,"你可能还在上小学"),
-    MIDDLE_SCHOOL(101,"你可能在上初中"),;
+    UNKNOW_ERROR(-1, "Unknow Error!"),
+    SUCCESS(0, "Success!"),
+    PRIMARY_SCHOOL(100, "Primary School"),
+    MIDDLE_SCHOOL(101, "Middle School"),
+    FIELD_ERROR(103,"Field Error:"),
+    OBJECT_ERROR(104,"Object Error"),
+
+    ;
 
     private Integer code;
 
     private String message;
+
+    ResultEnum(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 
     public Integer getCode() {
         return code;
@@ -17,10 +28,4 @@ public enum ResultEnum {
     public String getMessage() {
         return message;
     }
-
-    ResultEnum(Integer code, String message) {
-        this.code = code;
-        this.message = message;
-    }
-
 }
